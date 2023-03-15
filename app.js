@@ -7,6 +7,7 @@ const bookingRouter = require('./src/routes/bookingRouter');
 const carsRouter = require('./src/routes/carsRouter');
 const tripsRouter = require('./src/routes/tripsRouter');
 const reviewsRouter = require('./src/routes/reviewsRouter');
+const loginRouter = require('./src/routes/loginRouter');
 
 
 const app = express();
@@ -19,6 +20,7 @@ app.use(bookingRouter);
 app.use(carsRouter);
 app.use(tripsRouter);
 app.use(reviewsRouter);
+app.use(loginRouter);
 
 // Inicia o servidor
 const PORT = process.env.PORT || 3000;
