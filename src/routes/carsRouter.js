@@ -3,6 +3,6 @@ const router = express.Router();
 
 const carsRouter = require('../controllers/carsController');
 
-router.use('/cars', carsRouter);
+router.use('/cars', verifyToken, carsRouter);
 
 module.exports = router;

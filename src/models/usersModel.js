@@ -12,6 +12,14 @@ async function getUserById(id) {
   return rows[0];
 }
 
+// Função para buscar um usuário pelo seu EMAIL
+const getUserByEmail = async (email) => {
+  const query = 'SELECT id, name, email, password, is_driver FROM users WHERE email = $1';
+  const values = [email];
+  const result = await pool.query(query, values);
+  return result.rows[0];
+};
+
 // Função para inserir um novo usuário no banco de dados
 async function createUser(name, email, password, isDriver) {
   const { rows } = await pool.query(
@@ -38,6 +46,7 @@ async function deleteUser(id) {
 
 module.exports = {
   getAllUsers,
+  getUserByEmail,
   getUserById,
   createUser,
   updateUser,

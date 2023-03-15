@@ -1,4 +1,5 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
 const router = express.Router();
 const UserModel = require('../models/usersModel');
 
@@ -30,7 +31,9 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
   try {
     const { name, email, password, isDriver } = req.body;
-    const newUser = await UserModel.createUser(name, email, password, isDriver);
+    const salt = await bcrypt.genSalt(10);
+    const hash = await bcrypt.hash(password, salt);
+    const newUser = await UserModel.createUser(name, email, hash, isDriver);
     res.status(201).json(newUser);
   } catch (err) {
     res.status(500).json({ error: err.message });
