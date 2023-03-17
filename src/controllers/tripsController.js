@@ -1,110 +1,64 @@
-const express = require('express');
-const TripsModel = require('../models/tripsModel');
+const { getAllTrips, getTripById, createTrip, updateTrip, deleteTrip} = require('../models/tripsModel');
 
-const router = express.Router();
-
-// Rota para listar todas as viagens
-router.get('/', async (req, res) => {
-  try {
-    const trips = await TripsModel.getAllTrips();
-    res.status(200).json(trips);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Rota para buscar uma viagem pelo id
-router.get('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const trip = await TripsModel.getTripById(id);
-    if (trip) {
-      res.status(200).json(trip);
-    } else {
-      res.status(404).json({ message: 'Viagem não encontrada.' });
+const tripsController = {
+  getAllTrips: async (req, res) => {
+    try {
+      const trips = await getAllTrips();
+      res.status(200).json(trips);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  },
 
-// Rota para criar uma nova viagem
-router.post('/', async (req, res) => {
-  try {
-    const {
-      driverId,
-      departureLocation,
-      destinationLocation,
-      dateTime,
-      availableSeats,
-      price,
-      description,
-      carId,
-    } = req.body;
-    const newTrip = await TripsModel.createTrip(
-      driverId,
-      departureLocation,
-      destinationLocation,
-      dateTime,
-      availableSeats,
-      price,
-      description,
-      carId
-    );
-    res.status(201).json(newTrip);
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// Rota para atualizar uma viagem existente
-router.put('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const {
-      driverId,
-      departureLocation,
-      destinationLocation,
-      dateTime,
-      availableSeats,
-      price,
-      description,
-      carId,
-    } = req.body;
-    const updatedTrip = await TripsModel.updateTrip(
-      id,
-      driverId,
-      departureLocation,
-      destinationLocation,
-      dateTime,
-      availableSeats,
-      price,
-      description,
-      carId
-    );
-    if (updatedTrip) {
-      res.status(200).json(updatedTrip);
-    } else {
-      res.status(404).json({ message: 'Viagem não encontrada.' });
+  getTripById: async (req, res) => {
+    try {
+      const trip = await getTripById(req.params.id);
+      if (!trip) {
+        res.status(404).json({ message: 'Trip not found' });
+      } else {
+        res.status(200).json(trip);
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  },
 
-// Rota para excluir uma viagem
-router.delete('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedTrip = await TripsModel.deleteTrip(id);
-    if (deletedTrip) {
-      res.status(200).json({ message: 'Viagem excluída com sucesso.' });
-    } else {
-      res.status(404).json({ message: 'Viagem não encontrada.' });
+  createTrip: async (req, res) => {
+    try {
+      const { startLocation, endLocation, startTime, availableSeats, price } = req.body;
+      const newTrip = await createTrip(startLocation, endLocation, startTime, availableSeats, price);
+      res.status(201).json(newTrip);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
+  },
 
-module.exports = router;
+  updateTrip: async (req, res) => {
+    try {
+      const { id, startLocation, endLocation, startTime, availableSeats, price } = req.body;
+      const updatedTrip = await updateTrip(id, startLocation, endLocation, startTime, availableSeats, price);
+      if (!updatedTrip) {
+        res.status(404).json({ message: 'Trip not found' });
+      } else {
+        res.status(200).json(updatedTrip);
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
+
+  deleteTrip: async (req, res) => {
+    try {
+      const deletedTrip = await deleteTrip(req.params.id);
+      if (!deletedTrip) {
+        res.status(404).json({ message: 'Trip not found' });
+      } else {
+        res.status(200).json({ message: 'Trip deleted' });
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+};
+
+module.exports = tripsController;
