@@ -13,7 +13,7 @@ const getTripById = async (id) => {
 const createTrip = async (driverId, departureLocation, destinationLocation, dateTime, availableSeats, price, description, carId) => {
   const { rows } = await pool.query(
     'INSERT INTO trips (driver_id, departure_location, destination_location, date_time, available_seats, price, description, car_id) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
-    [driverId, departureLocation, destinationLocation, dateTime, availableSeats, price, description, carId]
+    [driverId, departureLocation, destinationLocation, new Date(dateTime).toISOString(), availableSeats, price, description, carId]
   );
   return rows[0];
 };

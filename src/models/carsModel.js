@@ -10,6 +10,11 @@ async function getCarById(id) {
   return rows[0];
 }
 
+async function getCarsByDriverId(driverId) {
+  const { rows } = await pool.query('SELECT * FROM cars WHERE driver_id = $1', [driverId]);
+  return rows;
+}
+
 async function createCar(driverId, model, year, color, licensePlate) {
   const { rows } = await pool.query(
     'INSERT INTO cars (driver_id, model, year, color, license_plate) VALUES ($1, $2, $3, $4, $5) RETURNING *',
@@ -34,6 +39,7 @@ async function deleteCar(id) {
 module.exports = {
   getAllCars,
   getCarById,
+  getCarsByDriverId,
   createCar,
   updateCar,
   deleteCar,
