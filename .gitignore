@@ -41,3 +41,4 @@ __tests__/
 # outros arquivos que não devem ser versionados
 .DS_Store
 Thumbs.db
+.idea
