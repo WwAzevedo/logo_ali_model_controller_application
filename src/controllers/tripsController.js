@@ -25,8 +25,8 @@ const tripsController = {
 
   createTrip: async (req, res) => {
     try {
-      const { startLocation, endLocation, startTime, availableSeats, price } = req.body;
-      const newTrip = await createTrip(startLocation, endLocation, startTime, availableSeats, price);
+      const { driverId, departureLocation, destinationLocation, dateTime, availableSeats, price, description, carId } = req.body;
+      const newTrip = await createTrip(driverId, departureLocation, destinationLocation, dateTime, availableSeats, price, description, carId);
       res.status(201).json(newTrip);
     } catch (err) {
       res.status(500).json({ error: err.message });
