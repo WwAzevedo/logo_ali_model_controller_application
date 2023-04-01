@@ -1,4 +1,4 @@
-const {getAllCars, getCarById, createCar, updateCar, deleteCar} = require('../models/carsModel');
+const { getAllCars, getCarById, createCar, updateCar, deleteCar, getCarsByDriverId } = require('../models/carsModel');
 
 const carsController = {
   getAllCars: async (req, res) => {
@@ -58,8 +58,22 @@ const carsController = {
     } catch (err) {
       res.status(500).json({ error: err.message });
     }
+  },
+
+  getCarsByDriverId: async (req, res) => {
+    try {
+      const cars = await getCarsByDriverId(req.params.driverId);
+      if (!cars) {
+        res.status(404).json({ message: 'No cars found for driver' });
+      } else {
+        res.status(200).json(cars);
+      }
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
   }
 };
+
 
 
 module.exports = carsController;
