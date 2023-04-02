@@ -2,11 +2,12 @@ const express = require('express');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const { getUserByEmail } = require('../models/usersModel');
+require('dotenv').config();
 
 const router = express.Router();
 
-const secretKey = 'mySecretKey';
-const expiresIn = '1h';
+const secretKey = process.env.SECRET_KEY;
+const expiresIn = '10h';
 
 router.post('/', async (req, res) => {
   try {
